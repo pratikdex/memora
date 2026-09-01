@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Memora — AI-Powered Reminders & Notes</title>
+  <meta name="description" content="Memora is an intelligent reminder and notes app that uses AI to ask follow-up questions, generate summaries, and revolutionize how you capture ideas.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+</head>
+<body>
+  <div id="app">
+    <!-- ─── Auth Screen ─── -->
+    <div id="auth-screen" class="screen active">
+      <div class="auth-container">
+        <div class="auth-hero">
+          <div class="hero-glow"></div>
+          <div class="hero-content">
+            <div class="hero-logo">
+              <span class="logo-icon">🧠</span>
+              <h1 class="logo-text">Memora</h1>
+            </div>
+            <p class="hero-tagline">AI-powered reminders & notes that think with you</p>
+            <div class="hero-features">
+              <div class="hero-feature">
+                <span class="hero-feature-icon">✨</span>
+                <span>Smart follow-up questions</span>
+              </div>
+              <div class="hero-feature">
+                <span class="hero-feature-icon">📝</span>
+                <span>AI-generated summaries</span>
+              </div>
+              <div class="hero-feature">
+                <span class="hero-feature-icon">🏷️</span>
+                <span>Auto-categorization & tagging</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="auth-form-panel">
+          <div class="auth-form-wrapper">
+            <div class="auth-tabs">
+              <button class="auth-tab active" data-tab="login" id="login-tab">Sign In</button>
+              <button class="auth-tab" data-tab="register" id="register-tab">Create Account</button>
+            </div>
+
+            <!-- Login Form -->
+            <form id="login-form" class="auth-form active">
+              <div class="form-group">
+                <label for="login-email">Email</label>
+                <input type="email" id="login-email" placeholder="demo@memora.app" required autocomplete="email">
+              </div>
+              <div class="form-group">
+                <label for="login-password">Password</label>
+                <input type="password" id="login-password" placeholder="••••••••" required autocomplete="current-password">
+              </div>
+              <button type="submit" class="btn btn-primary btn-block" id="login-submit">
+                <span class="btn-text">Sign In</span>
+                <span class="btn-loader"></span>
+              </button>
+              <p class="auth-hint">Demo: demo@memora.app / password123</p>
+            </form>
+
+            <!-- Register Form -->
+            <form id="register-form" class="auth-form">
+              <div class="form-group">
+                <label for="register-name">Full Name</label>
+                <input type="text" id="register-name" placeholder="Your name" required>
+              </div>
+              <div class="form-group">
+                <label for="register-email">Email</label>
+                <input type="email" id="register-email" placeholder="you@example.com" required autocomplete="email">
+              </div>
+              <div class="form-group">
+                <label for="register-password">Password</label>
+                <input type="password" id="register-password" placeholder="Min 8 characters" required minlength="8" autocomplete="new-password">
+              </div>
+              <button type="submit" class="btn btn-primary btn-block" id="register-submit">
+                <span class="btn-text">Create Account</span>
+                <span class="btn-loader"></span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── Dashboard ─── -->
+    <div id="dashboard-screen" class="screen">
+      <!-- Sidebar -->
+      <aside id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+          <div class="sidebar-logo">
+            <span class="logo-icon-sm">🧠</span>
+            <span class="logo-text-sm">Memora</span>
+          </div>
+        </div>
+        <nav class="sidebar-nav">
+          <button class="nav-item active" data-view="dashboard" id="nav-dashboard">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+            <span>Dashboard</span>
+          </button>
+          <button class="nav-item" data-view="reminders" id="nav-reminders">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            <span>Reminders</span>
+          </button>
+          <button class="nav-item" data-view="notes" id="nav-notes">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            <span>Notes</span>
+          </button>
+          <button class="nav-item" data-view="ai" id="nav-ai">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Z"/><path d="M12 6v6l4 2"/></svg>
+            <span>AI Assistant</span>
+            <span class="nav-badge">AI</span>
+          </button>
+        </nav>
+        <div class="sidebar-footer">
+          <div class="user-profile" id="user-profile">
+            <div class="user-avatar" id="user-avatar">D</div>
+            <div class="user-info">
+              <span class="user-name" id="user-name">Demo User</span>
+              <span class="user-email" id="user-email">demo@memora.app</span>
+            </div>
+          </div>
+          <button class="btn-logout" id="logout-btn" title="Sign Out">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          </button>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <!-- Top Bar -->
+        <header class="topbar">
+          <button class="sidebar-toggle" id="sidebar-toggle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+          <h2 class="topbar-title" id="topbar-title">Dashboard</h2>
+          <div class="topbar-actions">
+            <button class="btn btn-glow" id="quick-add-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span>New</span>
+            </button>
+          </div>
+        </header>
+
+        <!-- Views Container -->
+        <div class="views-container">
+          <!-- Dashboard View -->
+          <div id="view-dashboard" class="view active">
+            <div class="dashboard-grid">
+              <!-- Stats Row -->
+              <div class="stats-row">
+                <div class="stat-card" id="stat-reminders">
+                  <div class="stat-icon stat-icon-reminders">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                  </div>
+                  <div class="stat-info">
+                    <span class="stat-number" id="stat-reminders-count">0</span>
+                    <span class="stat-label">Active Reminders</span>
+                  </div>
+                </div>
+                <div class="stat-card" id="stat-notes">
+                  <div class="stat-icon stat-icon-notes">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  </div>
+                  <div class="stat-info">
+                    <span class="stat-number" id="stat-notes-count">0</span>
+                    <span class="stat-label">Notes</span>
+                  </div>
+                </div>
+                <div class="stat-card" id="stat-urgent">
+                  <div class="stat-icon stat-icon-urgent">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                  </div>
+                  <div class="stat-info">
+                    <span class="stat-number" id="stat-urgent-count">0</span>
+                    <span class="stat-label">Urgent</span>
+                  </div>
+                </div>
+                <div class="stat-card" id="stat-completed">
+                  <div class="stat-icon stat-icon-completed">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                  </div>
+                  <div class="stat-info">
+                    <span class="stat-number" id="stat-completed-count">0</span>
+                    <span class="stat-label">Completed</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Upcoming Reminders -->
+              <div class="dashboard-section">
+                <div class="section-header">
+                  <h3>Upcoming Reminders</h3>
+                  <button class="btn btn-ghost btn-sm" data-navigate="reminders">View All →</button>
+                </div>
+                <div id="upcoming-reminders" class="cards-grid">
+                  <div class="empty-state-mini">Loading...</div>
+                </div>
+              </div>
+
+              <!-- Recent Notes -->
+              <div class="dashboard-section">
+                <div class="section-header">
+                  <h3>Recent Notes</h3>
+                  <button class="btn btn-ghost btn-sm" data-navigate="notes">View All →</button>
+                </div>
+                <div id="recent-notes" class="cards-grid">
+                  <div class="empty-state-mini">Loading...</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Reminders View -->
+          <div id="view-reminders" class="view">
+            <div class="view-header">
+              <div class="view-filters">
+                <div class="filter-group">
+                  <select id="reminder-status-filter" class="filter-select">
+                    <option value="">All Status</option>
+                    <option value="PENDING" selected>Pending</option>
+                    <option value="COMPLETED">Completed</option>
+                    <option value="SNOOZED">Snoozed</option>
+                    <option value="CANCELLED">Cancelled</option>
+                  </select>
+                  <select id="reminder-priority-filter" class="filter-select">
+                    <option value="">All Priority</option>
+                    <option value="URGENT">Urgent</option>
+                    <option value="HIGH">High</option>
+                    <option value="MEDIUM">Medium</option>
+                    <option value="LOW">Low</option>
+                  </select>
+                </div>
+                <div class="search-wrapper">
+                  <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                  <input type="text" id="reminder-search" class="search-input" placeholder="Search reminders...">
+                </div>
+              </div>
+              <button class="btn btn-glow" id="new-reminder-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                New Reminder
+              </button>
+            </div>
+            <div id="reminders-list" class="cards-list">
+              <div class="empty-state">
+                <div class="empty-state-icon">🔔</div>
+                <h3>No reminders yet</h3>
+                <p>Create your first AI-powered reminder</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Notes View -->
+          <div id="view-notes" class="view">
+            <div class="view-header">
+              <div class="view-filters">
+                <div class="search-wrapper">
+                  <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                  <input type="text" id="note-search" class="search-input" placeholder="Search notes...">
+                </div>
+              </div>
+              <button class="btn btn-glow" id="new-note-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                New Note
+              </button>
+            </div>
+            <div id="notes-list" class="cards-list">
+              <div class="empty-state">
+                <div class="empty-state-icon">📝</div>
+                <h3>No notes yet</h3>
+                <p>Capture your first idea</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- AI Assistant View -->
+          <div id="view-ai" class="view">
+            <div class="ai-container">
+              <div class="ai-header">
+                <div class="ai-header-glow"></div>
+                <h3>🧠 AI Assistant</h3>
+                <p>Let AI help you create smarter reminders and notes</p>
+              </div>
+              <div class="ai-actions-grid">
+                <button class="ai-action-card" id="ai-ask-reminder">
+                  <div class="ai-action-icon">🔔</div>
+                  <h4>Smart Reminder</h4>
+                  <p>AI asks follow-up questions to build the perfect reminder</p>
+                </button>
+                <button class="ai-action-card" id="ai-ask-note">
+                  <div class="ai-action-icon">📝</div>
+                  <h4>Enhanced Note</h4>
+                  <p>AI generates summaries and key points for your notes</p>
+                </button>
+                <button class="ai-action-card" id="ai-categorize">
+                  <div class="ai-action-icon">🏷️</div>
+                  <h4>Auto Categorize</h4>
+                  <p>Intelligently categorize and tag any text</p>
+                </button>
+                <button class="ai-action-card" id="ai-enhance">
+                  <div class="ai-action-icon">✨</div>
+                  <h4>Enhance Content</h4>
+                  <p>Improve and expand your notes with AI insights</p>
+                </button>
+              </div>
+              <div id="ai-chat" class="ai-chat hidden">
+                <div id="ai-messages" class="ai-messages"></div>
+                <div class="ai-input-area">
+                  <textarea id="ai-input" class="ai-input" placeholder="Describe your reminder or note..." rows="3"></textarea>
+                  <button class="btn btn-glow" id="ai-send">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- ─── Modals ─── -->
+    <!-- New Reminder Modal -->
+    <div id="reminder-modal" class="modal-overlay">
+      <div class="modal">
+        <div class="modal-header">
+          <h3 id="reminder-modal-title">New Reminder</h3>
+          <button class="modal-close" data-close-modal>&times;</button>
+        </div>
+        <form id="reminder-form" class="modal-body">
+          <input type="hidden" id="reminder-edit-id">
+          <div class="form-group">
+            <label for="reminder-title">Title</label>
+            <input type="text" id="reminder-title" placeholder="What do you need to remember?" required>
+          </div>
+          <div class="form-group">
+            <label for="reminder-input">Details</label>
+            <textarea id="reminder-input" placeholder="Describe your reminder in natural language..." rows="4" required></textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="reminder-datetime">Remind At</label>
+              <input type="datetime-local" id="reminder-datetime" required>
+            </div>
+            <div class="form-group">
+              <label for="reminder-priority">Priority</label>
+              <select id="reminder-priority">
+                <option value="LOW">Low</option>
+                <option value="MEDIUM" selected>Medium</option>
+                <option value="HIGH">High</option>
+                <option value="URGENT">Urgent</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="reminder-tags">Tags (comma-separated)</label>
+            <input type="text" id="reminder-tags" placeholder="work, meeting, urgent">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-ghost" data-close-modal>Cancel</button>
+            <button type="submit" class="btn btn-primary" id="reminder-save-btn">
+              <span class="btn-text">Create Reminder</span>
+              <span class="btn-loader"></span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- New Note Modal -->
+    <div id="note-modal" class="modal-overlay">
+      <div class="modal">
+        <div class="modal-header">
+          <h3 id="note-modal-title">New Note</h3>
+          <button class="modal-close" data-close-modal>&times;</button>
+        </div>
+        <form id="note-form" class="modal-body">
+          <input type="hidden" id="note-edit-id">
+          <div class="form-group">
+            <label for="note-title">Title</label>
+            <input type="text" id="note-title" placeholder="Note title" required>
+          </div>
+          <div class="form-group">
+            <label for="note-content">Content</label>
+            <textarea id="note-content" placeholder="Write your note..." rows="8" required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="note-tags">Tags (comma-separated)</label>
+            <input type="text" id="note-tags" placeholder="personal, ideas">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-ghost" data-close-modal>Cancel</button>
+            <button type="submit" class="btn btn-primary" id="note-save-btn">
+              <span class="btn-text">Create Note</span>
+              <span class="btn-loader"></span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Detail Modal (for viewing reminder/note details) -->
+    <div id="detail-modal" class="modal-overlay">
+      <div class="modal modal-lg">
+        <div class="modal-header">
+          <h3 id="detail-modal-title">Details</h3>
+          <button class="modal-close" data-close-modal>&times;</button>
+        </div>
+        <div id="detail-modal-body" class="modal-body">
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="toast-container"></div>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,126 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── User ────────────────────────────────────────────────────────────────────
+
+model User {
+  id           String     @id @default(uuid())
+  email        String     @unique
+  passwordHash String     @map("password_hash")
+  name         String
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+
+  reminders Reminder[]
+  notes     Note[]
+
+  @@map("users")
+}
+
+// ─── Reminder ────────────────────────────────────────────────────────────────
+
+model Reminder {
+  id         String         @id @default(uuid())
+  title      String
+  rawInput   String         @map("raw_input")
+  aiSummary  String?        @map("ai_summary")
+  category   String?
+  priority   Priority       @default(MEDIUM)
+  status     ReminderStatus @default(PENDING)
+  remindAt   DateTime       @map("remind_at")
+  recurrence String?
+
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  aiConversations AiConversation[]
+  tags            Tag[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([userId])
+  @@index([status])
+  @@index([remindAt])
+  @@map("reminders")
+}
+
+// ─── Note ────────────────────────────────────────────────────────────────────
+
+model Note {
+  id         String   @id @default(uuid())
+  title      String
+  rawContent String   @map("raw_content")
+  aiSummary  String?  @map("ai_summary")
+  aiKeyPoints String[] @map("ai_key_points")
+  category   String?
+
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  aiConversations AiConversation[]
+  tags            Tag[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([userId])
+  @@map("notes")
+}
+
+// ─── AI Conversation ─────────────────────────────────────────────────────────
+
+model AiConversation {
+  id      String @id @default(uuid())
+  role    String // "user" | "assistant" | "system"
+  content String
+
+  reminderId String?   @map("reminder_id")
+  reminder   Reminder? @relation(fields: [reminderId], references: [id], onDelete: Cascade)
+
+  noteId String? @map("note_id")
+  note   Note?   @relation(fields: [noteId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([reminderId])
+  @@index([noteId])
+  @@map("ai_conversations")
+}
+
+// ─── Tag ─────────────────────────────────────────────────────────────────────
+
+model Tag {
+  id   String @id @default(uuid())
+  name String @unique
+
+  reminders Reminder[]
+  notes     Note[]
+
+  @@map("tags")
+}
+
+// ─── Enums ───────────────────────────────────────────────────────────────────
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum ReminderStatus {
+  PENDING
+  COMPLETED
+  SNOOZED
+  CANCELLED
+}
